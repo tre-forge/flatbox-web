@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>flatbox</title>
+  <style>
+    :root{
+      --bg0:#070A12;
+      --bg1:#11162B;
+      --fg:#EAF0FF;
+      --muted:rgba(234,240,255,.75);
+      --card:rgba(255,255,255,.06);
+      --card2:rgba(255,255,255,.09);
+      --border:rgba(255,255,255,.12);
+      --shadow: 0 18px 60px rgba(0,0,0,.45);
+    }
+    body{
+      margin:0;
+      color:var(--fg);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      background: linear-gradient(180deg,var(--bg0),var(--bg1));
+      overflow-x:hidden;
+    }
+    .wrap{min-height:100vh; display:grid; place-items:center; padding:52px 16px 120px;}
+    .stage{position:relative; height:700px; width:min(1120px, 100%); perspective: 1200px; transform-style:preserve-3d;}
+
+    .camera{transform: translateZ(320px) rotateX(14deg); transform-style:preserve-3d; transition: transform .6s cubic-bezier(.2,1,.2,1);}  
+
+    .layer{position:absolute; left:50%; transform-style:preserve-3d; width:min(1040px,100%); padding:0 4px;}
+    .layer .shell{border-radius:28px; border:1px solid var(--border); box-shadow:var(--shadow); background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(0,0,0,.12));}
+
+    .bg.shell{background:
+      radial-gradient(800px 300px at 20% 10%, rgba(139,233,253,.18), transparent 60%),
+      radial-gradient(700px 340px at 80% 15%, rgba(189,147,249,.12), transparent 56%),
+      radial-gradient(720px 450px at 50% 90%, rgba(255,184,108,.10), transparent 60%),
+      linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,0));
+      position:relative;
+    }
+    .bg.shell:before{
+      content:"";
+      position:absolute;
+      inset:-1px;
+      border-radius:inherit;
+      border:1px solid rgba(255,255,255,.10);
+      background: linear-gradient(180deg, rgba(255,255,255,.18), transparent);
+      opacity:.35;
+      mix-blend-mode:overlay;
+    }
+
+    .hero{position:relative; padding:28px 32px;}
+    .hero h1{margin:0; font-size: clamp(30px, 6vw, 52px); letter-spacing:.01em;}
+    .hero p{margin:12px 0 0; max-width: 70ch; color:var(--muted);}
+    .tag{margin-top:16px; display:inline-flex; align-items:center; gap:10px; padding:10px 12px; border-radius:999px; border:1px solid var(--border); background: rgba(0,0,0,.18);}
+    .dot{width:8px; height:8px; border-radius:50%; background:#8BE9FD; box-shadow: 0 0 0 6px rgba(139,233,253,.18);}    
+
+    .grid{display:grid; gap:16px; padding:28px; grid-template-columns: repeat(3, minmax(0, 1fr));}
+    .card{height:130px; border-radius:18px; background: linear-gradient(180deg,var(--card2),var(--card)); border:1px solid var(--border); box-shadow: var(--shadow); padding:16px;}
+    .card .k{font-size:12px; color:var(--muted); letter-spacing:.06em}
+    .card .v{font-weight:800; margin-top:6px; font-size:16px;}
+
+    footer{text-align:center; padding:24px 0 0; color:rgba(255,255,255,.55);}
+
+    /* Static inverted-depth layout */
+    .stage .bg1 { transform: translateX(-50%) translateY(-20px) translateZ(-300px); }
+    .stage .bg2 { transform: translateX(-50%) translateY(-40px) translateZ(-440px) rotateZ(2deg); opacity:.78; }
+    .stage .heroLayer { transform: translateX(-50%) translateY(-175px) translateZ(-140px); }
+    .stage .gridLayer { transform: translateX(-50%) translateY(-34px) translateZ(-280px); }
+    .stage .planLayer { transform: translateX(-50%) translateY(240px) translateZ(-600px); }
+
+    .stage:hover .camera{ transform: translateZ(320px) rotateX(10deg) rotateY(2deg); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="stage" aria-label="flatbox inverted depth preview">
+      <div class="camera">
+        <div class="layer bg1"><div class="shell bg"></div></div>
+        <div class="layer bg2"><div class="shell bg"></div></div>
+
+        <div class="layer heroLayer">
+          <div class="shell">
+            <div class="hero">
+              <h1>flatbox</h1>
+              <p>Inverted depth: objects stay grounded, while the viewpoint sits above the scene. It reads like a miniature hoverable tabletop UI.</p>
+              <div class="tag"><span class="dot" aria-hidden="true"></span><span>Prototype preview</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="layer gridLayer">
+          <div class="shell">
+            <div class="grid">
+              <div class="card"><div class="k">CAM</div><div class="v">z +320</div></div>
+              <div class="card"><div class="k">UX</div><div class="v">hover-world</div></div>
+              <div class="card"><div class="k">STYLE</div><div class="v">cold glow</div></div>
+              <div class="card"><div class="k">ACTION</div><div class="v">scroll tilt</div></div>
+              <div class="card"><div class="k">FRAME</div><div class="v">layers</div></div>
+              <div class="card"><div class="k">DEV</div><div class="v">Vite/React</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="layer planLayer">
+          <div class="shell">
+            <div class="hero">
+              <h1>Next</h1>
+              <p>Step 1: keep this static visual language. Step 2: add real parallax + page sections (React/Three-ready).</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </div>
+
+  <footer>Preview built for concept direction: camera elevated on +Z.</footer>
+</body>
+</html>
