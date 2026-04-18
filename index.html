@@ -1,119 +1,57 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>flatbox</title>
-  <style>
-    :root{
-      --bg0:#070A12;
-      --bg1:#11162B;
-      --fg:#EAF0FF;
-      --muted:rgba(234,240,255,.75);
-      --card:rgba(255,255,255,.06);
-      --card2:rgba(255,255,255,.09);
-      --border:rgba(255,255,255,.12);
-      --shadow: 0 18px 60px rgba(0,0,0,.45);
-    }
-    body{
-      margin:0;
-      color:var(--fg);
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-      background: linear-gradient(180deg,var(--bg0),var(--bg1));
-      overflow-x:hidden;
-    }
-    .wrap{min-height:100vh; display:grid; place-items:center; padding:52px 16px 120px;}
-    .stage{position:relative; height:700px; width:min(1120px, 100%); perspective: 1200px; transform-style:preserve-3d;}
-
-    .camera{transform: translateZ(320px) rotateX(14deg); transform-style:preserve-3d; transition: transform .6s cubic-bezier(.2,1,.2,1);}  
-
-    .layer{position:absolute; left:50%; transform-style:preserve-3d; width:min(1040px,100%); padding:0 4px;}
-    .layer .shell{border-radius:28px; border:1px solid var(--border); box-shadow:var(--shadow); background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(0,0,0,.12));}
-
-    .bg.shell{background:
-      radial-gradient(800px 300px at 20% 10%, rgba(139,233,253,.18), transparent 60%),
-      radial-gradient(700px 340px at 80% 15%, rgba(189,147,249,.12), transparent 56%),
-      radial-gradient(720px 450px at 50% 90%, rgba(255,184,108,.10), transparent 60%),
-      linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,0));
-      position:relative;
-    }
-    .bg.shell:before{
-      content:"";
-      position:absolute;
-      inset:-1px;
-      border-radius:inherit;
-      border:1px solid rgba(255,255,255,.10);
-      background: linear-gradient(180deg, rgba(255,255,255,.18), transparent);
-      opacity:.35;
-      mix-blend-mode:overlay;
-    }
-
-    .hero{position:relative; padding:28px 32px;}
-    .hero h1{margin:0; font-size: clamp(30px, 6vw, 52px); letter-spacing:.01em;}
-    .hero p{margin:12px 0 0; max-width: 70ch; color:var(--muted);}
-    .tag{margin-top:16px; display:inline-flex; align-items:center; gap:10px; padding:10px 12px; border-radius:999px; border:1px solid var(--border); background: rgba(0,0,0,.18);}
-    .dot{width:8px; height:8px; border-radius:50%; background:#8BE9FD; box-shadow: 0 0 0 6px rgba(139,233,253,.18);}    
-
-    .grid{display:grid; gap:16px; padding:28px; grid-template-columns: repeat(3, minmax(0, 1fr));}
-    .card{height:130px; border-radius:18px; background: linear-gradient(180deg,var(--card2),var(--card)); border:1px solid var(--border); box-shadow: var(--shadow); padding:16px;}
-    .card .k{font-size:12px; color:var(--muted); letter-spacing:.06em}
-    .card .v{font-weight:800; margin-top:6px; font-size:16px;}
-
-    footer{text-align:center; padding:24px 0 0; color:rgba(255,255,255,.55);}
-
-    /* Static inverted-depth layout */
-    .stage .bg1 { transform: translateX(-50%) translateY(-20px) translateZ(-300px); }
-    .stage .bg2 { transform: translateX(-50%) translateY(-40px) translateZ(-440px) rotateZ(2deg); opacity:.78; }
-    .stage .heroLayer { transform: translateX(-50%) translateY(-175px) translateZ(-140px); }
-    .stage .gridLayer { transform: translateX(-50%) translateY(-34px) translateZ(-280px); }
-    .stage .planLayer { transform: translateX(-50%) translateY(240px) translateZ(-600px); }
-
-    .stage:hover .camera{ transform: translateZ(320px) rotateX(10deg) rotateY(2deg); }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>flatbox</title>
+<style>
+body{margin:0;background:linear-gradient(180deg,#070A12,#11162B);color:#EAF0FF;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;overflow-x:hidden;}
+.wrap{padding:70px 16px 110px;min-height:100vh;}
+.stage{height:720px;max-width:1120px;margin:0 auto;perspective:900px;transform-style:preserve-3d;position:relative;}
+camera{transform:translateZ(320px) rotateX(16deg);transform-style:preserve-3d;}
+.layer{position:absolute;left:50%;width:min(1050px,100%);transform-style:preserve-3d;}
+.shell{border-radius:22px;border:1px solid rgba(255,255,255,.12);box-shadow:0 18px 60px rgba(0,0,0,.45);background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(0,0,0,.12));overflow:hidden;}
+.hero{padding:26px 30px;}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;padding:20px 30px 30px;}
+.card{height:122px;border-radius:18px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.07);padding:14px;}
+@media(max-width:900px){.grid{grid-template-columns:1fr;}}
+</style>
 </head>
 <body>
-  <div class="wrap">
-    <section class="stage" aria-label="flatbox inverted depth preview">
-      <div class="camera">
-        <div class="layer bg1"><div class="shell bg"></div></div>
-        <div class="layer bg2"><div class="shell bg"></div></div>
-
-        <div class="layer heroLayer">
-          <div class="shell">
-            <div class="hero">
-              <h1>flatbox</h1>
-              <p>Inverted depth: objects stay grounded, while the viewpoint sits above the scene. It reads like a miniature hoverable tabletop UI.</p>
-              <div class="tag"><span class="dot" aria-hidden="true"></span><span>Prototype preview</span></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="layer gridLayer">
-          <div class="shell">
-            <div class="grid">
-              <div class="card"><div class="k">CAM</div><div class="v">z +320</div></div>
-              <div class="card"><div class="k">UX</div><div class="v">hover-world</div></div>
-              <div class="card"><div class="k">STYLE</div><div class="v">cold glow</div></div>
-              <div class="card"><div class="k">ACTION</div><div class="v">scroll tilt</div></div>
-              <div class="card"><div class="k">FRAME</div><div class="v">layers</div></div>
-              <div class="card"><div class="k">DEV</div><div class="v">Vite/React</div></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="layer planLayer">
-          <div class="shell">
-            <div class="hero">
-              <h1>Next</h1>
-              <p>Step 1: keep this static visual language. Step 2: add real parallax + page sections (React/Three-ready).</p>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </section>
-  </div>
-
-  <footer>Preview built for concept direction: camera elevated on +Z.</footer>
+<main class="wrap">
+<section class="stage">
+<div class="camera">
+<div class="layer" data-depth="0.12" data-base="translateX(-50%) translateY(-30px) translateZ(-380px) rotateZ(2deg)"><div class="shell" style="height:380px;opacity:.6;"></div></div>
+<div class="layer" data-depth="0.06" data-base="translateX(-50%) translateY(-150px) translateZ(-150px)"><div class="shell"><div class="hero"><h1>flatbox</h1><p>Camera is higher on the Z axis.</p></div></div></div>
+<div class="layer" data-depth="0.10" data-base="translateX(-50%) translateY(-20px) translateZ(-280px)"><div class="shell"><div class="grid"><div class="card">hover</div><div class="card">parallax</div><div class="card">mini-world</div></div></div></div>
+</div>
+</section>
+<footer style="color:rgba(255,255,255,.55);text-align:center;max-width:1120px;margin:56px auto 0;">Prototype direction.</footer>
+</main>
+<script>
+(function(){
+var layers=[].slice.call(document.querySelectorAll('[data-depth]'));
+var tx=0,ty=0,ttx=0,tty=0;
+function lerp(a,b,t){return a+(b-a)*t;}
+function tick(){
+tx=lerp(tx,ttx,.08);
+ty=lerp(ty,tty,.08);
+layers.forEach(function(layer){
+var d=parseFloat(layer.dataset.depth||'0');
+var base=layer.dataset.base||'';
+layer.style.transform=base+' translateX('+tx*d*-0.9+'px) translateY('+ty*d*-0.7+'px)';
+});
+requestAnimationFrame(tick);
+}
+function move(e){
+var nx=(e.clientX/window.innerWidth-0.5)*2;
+var ny=(e.clientY/window.innerHeight-0.5)*2;
+ttx=nx*18;
+tty=ny*12;
+}
+window.addEventListener('pointermove',move);
+tick();
+})();
+</script>
 </body>
 </html>
